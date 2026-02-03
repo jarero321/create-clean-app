@@ -1,6 +1,14 @@
-export function getNestJSTemplates(config: { name: string; description: string }) {
-  return {
-    "package.json": `{
+import type { ProjectConfig, ProjectCreator } from "../../domain/interfaces";
+
+export class NestJSCreator implements ProjectCreator {
+  readonly type = "microservice";
+  readonly stack = "nestjs";
+  readonly installCommand = "npm install";
+  readonly nextSteps = "npm run start:dev";
+
+  getTemplates(config: ProjectConfig): Record<string, string> {
+    return {
+      "package.json": `{
   "name": "${config.name}",
   "version": "1.0.0",
   "description": "${config.description}",
@@ -10,7 +18,7 @@ export function getNestJSTemplates(config: { name: string; description: string }
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
-    "lint": "eslint \"{src,test}/**/*.ts\" --fix",
+    "lint": "eslint \\"{src,test}/**/*.ts\\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage"
@@ -64,7 +72,7 @@ export function getNestJSTemplates(config: { name: string; description: string }
 }
 `,
 
-    "tsconfig.json": `{
+      "tsconfig.json": `{
   "compilerOptions": {
     "module": "commonjs",
     "declaration": true,
@@ -92,13 +100,13 @@ export function getNestJSTemplates(config: { name: string; description: string }
 }
 `,
 
-    "tsconfig.build.json": `{
+      "tsconfig.build.json": `{
   "extends": "./tsconfig.json",
   "exclude": ["node_modules", "test", "dist", "**/*spec.ts"]
 }
 `,
 
-    "nest-cli.json": `{
+      "nest-cli.json": `{
   "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
   "sourceRoot": "src",
@@ -108,7 +116,7 @@ export function getNestJSTemplates(config: { name: string; description: string }
 }
 `,
 
-    ".gitignore": `node_modules/
+      ".gitignore": `node_modules/
 dist/
 .env
 .env.*
@@ -120,13 +128,13 @@ coverage/
 .DS_Store
 `,
 
-    ".prettierrc": `{
+      ".prettierrc": `{
   "singleQuote": true,
   "trailingComma": "all"
 }
 `,
 
-    "README.md": `# ${config.name}
+      "README.md": `# ${config.name}
 
 ${config.description}
 
@@ -161,7 +169,7 @@ npm run start:prod # Run in production mode
 - \`POST /api/v1/process\` - Process data
 `,
 
-    "src/main.ts": `import { NestFactory } from '@nestjs/core';
+      "src/main.ts": `import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from '@infrastructure/http/app.module';
 
@@ -184,12 +192,12 @@ async function bootstrap() {
 bootstrap();
 `,
 
-    "src/domain/entities/input.entity.ts": `export class Input {
+      "src/domain/entities/input.entity.ts": `export class Input {
   constructor(public readonly data: string) {}
 }
 `,
 
-    "src/domain/entities/result.entity.ts": `import { randomUUID } from 'crypto';
+      "src/domain/entities/result.entity.ts": `import { randomUUID } from 'crypto';
 
 export class Result {
   public readonly id: string;
@@ -200,11 +208,11 @@ export class Result {
 }
 `,
 
-    "src/domain/entities/index.ts": `export * from './input.entity';
+      "src/domain/entities/index.ts": `export * from './input.entity';
 export * from './result.entity';
 `,
 
-    "src/domain/services/process.service.ts": `import { Injectable } from '@nestjs/common';
+      "src/domain/services/process.service.ts": `import { Injectable } from '@nestjs/common';
 import { Input, Result } from '@domain/entities';
 
 @Injectable()
@@ -215,10 +223,10 @@ export class ProcessService {
 }
 `,
 
-    "src/domain/services/index.ts": `export * from './process.service';
+      "src/domain/services/index.ts": `export * from './process.service';
 `,
 
-    "src/application/ports/process.port.ts": `import { Input, Result } from '@domain/entities';
+      "src/application/ports/process.port.ts": `import { Input, Result } from '@domain/entities';
 
 export interface ProcessPort {
   process(input: Input): Result;
@@ -227,10 +235,10 @@ export interface ProcessPort {
 export const PROCESS_PORT = Symbol('PROCESS_PORT');
 `,
 
-    "src/application/ports/index.ts": `export * from './process.port';
+      "src/application/ports/index.ts": `export * from './process.port';
 `,
 
-    "src/application/use-cases/process.use-case.ts": `import { Inject, Injectable } from '@nestjs/common';
+      "src/application/use-cases/process.use-case.ts": `import { Inject, Injectable } from '@nestjs/common';
 import { Input, Result } from '@domain/entities';
 import { PROCESS_PORT, ProcessPort } from '@application/ports';
 
@@ -247,10 +255,10 @@ export class ProcessUseCase {
 }
 `,
 
-    "src/application/use-cases/index.ts": `export * from './process.use-case';
+      "src/application/use-cases/index.ts": `export * from './process.use-case';
 `,
 
-    "src/infrastructure/http/dtos/process.dto.ts": `import { IsNotEmpty, IsString } from 'class-validator';
+      "src/infrastructure/http/dtos/process.dto.ts": `import { IsNotEmpty, IsString } from 'class-validator';
 
 export class ProcessRequestDto {
   @IsString()
@@ -264,10 +272,10 @@ export class ProcessResponseDto {
 }
 `,
 
-    "src/infrastructure/http/dtos/index.ts": `export * from './process.dto';
+      "src/infrastructure/http/dtos/index.ts": `export * from './process.dto';
 `,
 
-    "src/infrastructure/http/controllers/health.controller.ts": `import { Controller, Get } from '@nestjs/common';
+      "src/infrastructure/http/controllers/health.controller.ts": `import { Controller, Get } from '@nestjs/common';
 
 @Controller('health')
 export class HealthController {
@@ -278,7 +286,7 @@ export class HealthController {
 }
 `,
 
-    "src/infrastructure/http/controllers/process.controller.ts": `import { Body, Controller, Post } from '@nestjs/common';
+      "src/infrastructure/http/controllers/process.controller.ts": `import { Body, Controller, Post } from '@nestjs/common';
 import { Input } from '@domain/entities';
 import { ProcessUseCase } from '@application/use-cases';
 import { ProcessRequestDto, ProcessResponseDto } from '../dtos';
@@ -300,11 +308,11 @@ export class ProcessController {
 }
 `,
 
-    "src/infrastructure/http/controllers/index.ts": `export * from './health.controller';
+      "src/infrastructure/http/controllers/index.ts": `export * from './health.controller';
 export * from './process.controller';
 `,
 
-    "src/infrastructure/http/app.module.ts": `import { Module } from '@nestjs/common';
+      "src/infrastructure/http/app.module.ts": `import { Module } from '@nestjs/common';
 import { ProcessService } from '@domain/services';
 import { PROCESS_PORT } from '@application/ports';
 import { ProcessUseCase } from '@application/use-cases';
@@ -323,5 +331,6 @@ import { HealthController, ProcessController } from './controllers';
 })
 export class AppModule {}
 `,
-  };
+    };
+  }
 }

@@ -2,23 +2,47 @@
   "name": "create-clean-app",
   "version": "1.0.0",
   "description": "CLI for scaffolding projects with Clean Architecture",
-  "module": "src/index.ts",
   "type": "module",
+  "main": "dist/index.js",
   "bin": {
-    "create-clean-app": "./src/index.ts"
+    "create-clean-app": "dist/index.js"
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "start": "bun run src/index.ts",
-    "build": "bun build src/index.ts --compile --outfile dist/create-go-app",
-    "link": "bun link"
+    "dev": "bun run src/index.ts",
+    "build": "tsup src/index.ts --format esm --dts --clean",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "cli",
+    "scaffold",
+    "clean-architecture",
+    "nestjs",
+    "golang",
+    "mcp",
+    "microservices"
+  ],
+  "author": "Carlos",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jarero321/create-clean-app.git"
+  },
+  "engines": {
+    "node": ">=18"
   },
   "devDependencies": {
-    "@types/bun": "latest",
     "@types/figlet": "^1.7.0",
-    "@types/gradient-string": "^1.1.6"
-  },
-  "peerDependencies": {
-    "typescript": "^5"
+    "@types/gradient-string": "^1.1.6",
+    "@types/node": "^22.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
   },
   "dependencies": {
     "@clack/prompts": "^1.0.0",
