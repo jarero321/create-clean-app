@@ -6,7 +6,7 @@ describe("CreatorRegistry", () => {
     const registry = new CreatorRegistry();
     const creators = registry.getAll();
 
-    expect(creators).toHaveLength(3);
+    expect(creators).toHaveLength(4);
   });
 
   it("should get creator by type and stack", () => {
@@ -26,6 +26,11 @@ describe("CreatorRegistry", () => {
     expect(nestjsCreator).toBeDefined();
     expect(nestjsCreator?.type).toBe("microservice");
     expect(nestjsCreator?.stack).toBe("nestjs");
+
+    const nestjsMcpCreator = registry.get("mcp", "nestjs");
+    expect(nestjsMcpCreator).toBeDefined();
+    expect(nestjsMcpCreator?.type).toBe("mcp");
+    expect(nestjsMcpCreator?.stack).toBe("nestjs");
   });
 
   it("should return undefined for non-existent creator", () => {
@@ -44,7 +49,8 @@ describe("CreatorRegistry", () => {
     expect(microserviceCreators.map((c) => c.stack)).toContain("nestjs");
 
     const mcpCreators = registry.getByType("mcp");
-    expect(mcpCreators).toHaveLength(1);
-    expect(mcpCreators[0].stack).toBe("go");
+    expect(mcpCreators).toHaveLength(2);
+    expect(mcpCreators.map((c) => c.stack)).toContain("go");
+    expect(mcpCreators.map((c) => c.stack)).toContain("nestjs");
   });
 });

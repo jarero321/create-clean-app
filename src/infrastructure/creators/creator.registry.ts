@@ -1,5 +1,6 @@
 import type { ProjectCreator } from "../../domain/interfaces";
 import { MCPCreator } from "./mcp.creator";
+import { NestJSMCPCreator } from "./nestjs-mcp.creator";
 import { GoAPICreator } from "./go-api.creator";
 import { NestJSCreator } from "./nestjs.creator";
 
@@ -8,6 +9,7 @@ export class CreatorRegistry {
 
   constructor() {
     this.register(new MCPCreator());
+    this.register(new NestJSMCPCreator());
     this.register(new GoAPICreator());
     this.register(new NestJSCreator());
   }

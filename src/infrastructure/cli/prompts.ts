@@ -31,12 +31,28 @@ export async function selectProjectType(): Promise<string | null> {
   return result as string;
 }
 
-export async function selectStack(creators: ProjectCreator[]): Promise<string | null> {
-  const options = creators.map((c) => ({
-    value: c.stack,
-    label: c.stack === "go" ? "Go" : "NestJS",
-    hint: c.stack === "go" ? "Chi router, lightweight & fast" : "TypeScript, decorators & DI",
-  }));
+export async function selectStack(creators: ProjectCreator[], projectType: string): Promise<string | null> {
+  const getStackInfo = (stack: string, type: string) => {
+    if (type === "mcp") {
+      return {
+        label: stack === "go" ? "Go" : "NestJS",
+        hint: stack === "go" ? "mcp-go SDK, lightweight & fast" : "TypeScript, @modelcontextprotocol/sdk",
+      };
+    }
+    return {
+      label: stack === "go" ? "Go" : "NestJS",
+      hint: stack === "go" ? "Chi router, lightweight & fast" : "TypeScript, decorators & DI",
+    };
+  };
+
+  const options = creators.map((c) => {
+    const info = getStackInfo(c.stack, projectType);
+    return {
+      value: c.stack,
+      label: info.label,
+      hint: info.hint,
+    };
+  });
 
   const result = await p.select({
     message: "Select your stack:",
