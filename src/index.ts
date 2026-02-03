@@ -21,9 +21,9 @@ async function main() {
 
   let stack = "go";
 
-  if (projectType === "microservice") {
-    const creators = registry.getByType("microservice");
-    const selectedStack = await selectStack(creators);
+  const creators = registry.getByType(projectType);
+  if (creators.length > 1) {
+    const selectedStack = await selectStack(creators, projectType);
     if (!selectedStack) return;
     stack = selectedStack;
   }
