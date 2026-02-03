@@ -2,30 +2,18 @@ name: CI
 
 on:
   push:
-    branches: [develop, main]
+    branches: [main, develop]
   pull_request:
-    branches: [develop, main]
+    branches: [main, develop]
 
 jobs:
-  test:
-    name: Test
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: "npm"
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run tests
-        run: npm run test:run
-
-      - name: Build
-        run: npm run build
+  ci:
+    uses: jarero321/shared-workflows/.github/workflows/node-ci.yml@main
+    with:
+      package-manager: 'bun'
+      run-lint: false
+      run-typecheck: false
+      run-tests: true
+      run-build: true
+      test-command: 'bun run test:run'
+      build-command: 'bun run build'
