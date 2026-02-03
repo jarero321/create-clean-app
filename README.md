@@ -1,15 +1,40 @@
-# create-go-app
+# create-clean-app
 
-To install dependencies:
+CLI for scaffolding projects with Clean Architecture.
+
+## Installation
 
 ```bash
 bun install
+bun link
 ```
 
-To run:
+## Usage
 
 ```bash
-bun run index.ts
+create-clean-app
 ```
 
-This project was created using `bun init` in bun v1.3.8. [Bun](https://bun.com) is a fast all-in-one JavaScript runtime.
+## Available Templates
+
+| Type | Stack | Description |
+|------|-------|-------------|
+| MCP Server | Go | Model Context Protocol for LLMs |
+| Microservice | Go | REST API with Chi router |
+| Microservice | NestJS | REST API with TypeScript & DI |
+
+## Features
+
+- **Git Flow** - Initialize with main/develop branches
+- **Docker** - Dockerfile and docker-compose (coming soon)
+- **GitHub Actions** - CI/CD workflow (coming soon)
+
+## Architecture
+
+All templates follow Clean Architecture:
+
+```
+├── domain/           # Entities & business logic
+├── application/      # Use cases & ports (interfaces)
+└── infrastructure/   # Adapters (HTTP, MCP, DB, etc.)
+```

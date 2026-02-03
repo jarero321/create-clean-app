@@ -1,11 +1,11 @@
 {
-  "name": "create-go-app",
+  "name": "create-clean-app",
   "version": "1.0.0",
-  "description": "CLI for scaffolding Go projects with Clean Architecture",
+  "description": "CLI for scaffolding projects with Clean Architecture",
   "module": "src/index.ts",
   "type": "module",
   "bin": {
-    "create-go-app": "./src/index.ts"
+    "create-clean-app": "./src/index.ts"
   },
   "scripts": {
     "start": "bun run src/index.ts",
