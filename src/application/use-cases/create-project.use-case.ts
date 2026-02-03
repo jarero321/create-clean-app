@@ -1,4 +1,5 @@
 import { join } from "path";
+import type { ProgressReporter } from "@cjarero183006/cli-builder/interfaces";
 import type {
   ProjectConfig,
   ProjectCreator,
@@ -7,10 +8,7 @@ import type {
   ShellService,
 } from "../../domain/interfaces";
 
-export interface ProgressReporter {
-  start(message: string): void;
-  stop(message: string): void;
-}
+export type { ProgressReporter };
 
 export class CreateProjectUseCase {
   constructor(

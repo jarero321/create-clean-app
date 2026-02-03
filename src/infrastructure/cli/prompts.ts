@@ -1,17 +1,21 @@
-import * as p from "@clack/prompts";
-import chalk from "chalk";
-import figlet from "figlet";
-import gradient from "gradient-string";
+import {
+  showBanner,
+  createProgressReporter,
+  showNote,
+  clack as p,
+  chalk,
+} from "@cjarero183006/cli-builder/ui";
+import type { ProgressReporter } from "@cjarero183006/cli-builder/interfaces";
 import type { ProjectConfig, ProjectCreator } from "../../domain/interfaces";
-import type { ProgressReporter } from "../../application/use-cases";
 
-const coolGradient = gradient(["#00d4ff", "#7c3aed", "#f472b6"]);
+export { createProgressReporter };
+export type { ProgressReporter };
 
-export function showBanner(): void {
-  console.clear();
-  const title = figlet.textSync("Clean App", { font: "Small" });
-  console.log(coolGradient(title));
-  console.log(chalk.dim("  Clean Architecture scaffolding for your projects\n"));
+export function showBannerUI(): void {
+  showBanner({
+    title: "Clean App",
+    subtitle: "Clean Architecture scaffolding for your projects",
+  });
 }
 
 export async function selectProjectType(): Promise<string | null> {
@@ -114,17 +118,9 @@ export async function getProjectConfig(): Promise<ProjectConfig | null> {
   };
 }
 
-export function createProgressReporter(): ProgressReporter {
-  const spinner = p.spinner();
-  return {
-    start: (message: string) => spinner.start(message),
-    stop: (message: string) => spinner.stop(message),
-  };
-}
-
 export function showNextSteps(projectName: string, nextSteps: string): void {
   console.log();
-  p.note(
+  showNote(
     `${chalk.cyan("cd")} ${projectName}\n${chalk.cyan(nextSteps)}`,
     "Next steps"
   );

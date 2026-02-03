@@ -3,7 +3,7 @@ import { CreateProjectUseCase } from "./application/use-cases";
 import { ShellServiceImpl, FileServiceImpl, GitServiceImpl } from "./infrastructure/services";
 import { CreatorRegistry } from "./infrastructure/creators";
 import {
-  showBanner,
+  showBannerUI,
   selectProjectType,
   selectStack,
   getProjectConfig,
@@ -12,7 +12,7 @@ import {
 } from "./infrastructure/cli";
 
 async function main() {
-  showBanner();
+  showBannerUI();
 
   const registry = new CreatorRegistry();
 

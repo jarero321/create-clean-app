@@ -1,23 +1,28 @@
 {
   "name": "@cjarero183006/create-clean-app",
   "version": "1.0.0",
-  "description": "CLI for scaffolding projects with Clean Architecture",
-  "type": "module",
+  "author": "Carlos",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jarero321/create-clean-app.git"
+  },
   "main": "dist/index.js",
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
+  },
   "bin": {
     "create-clean-app": "dist/index.js"
+  },
+  "description": "CLI for scaffolding projects with Clean Architecture",
+  "engines": {
+    "node": ">=18"
   },
   "files": [
     "dist"
   ],
-  "scripts": {
-    "dev": "bun run src/index.ts",
-    "build": "tsup src/index.ts --format esm --dts --clean",
-    "test": "vitest",
-    "test:run": "vitest run",
-    "test:coverage": "vitest run --coverage",
-    "prepublishOnly": "npm run build"
-  },
   "keywords": [
     "cli",
     "scaffold",
@@ -27,27 +32,17 @@
     "mcp",
     "microservices"
   ],
-  "author": "Carlos",
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/jarero321/create-clean-app.git"
+  "scripts": {
+    "dev": "bun run src/index.ts",
+    "build": "tsup src/index.ts --format esm --dts --clean",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "prepublishOnly": "npm run build"
   },
-  "engines": {
-    "node": ">=18"
-  },
-  "devDependencies": {
-    "@types/figlet": "^1.7.0",
-    "@types/gradient-string": "^1.1.6",
-    "@types/node": "^22.0.0",
-    "tsup": "^8.0.0",
-    "typescript": "^5.7.0",
-    "vitest": "^3.0.0"
-  },
+  "type": "module",
   "dependencies": {
-    "@clack/prompts": "^1.0.0",
-    "chalk": "^5.6.2",
-    "figlet": "^1.10.0",
-    "gradient-string": "^3.0.0"
+    "@cjarero183006/cli-builder": "^1.0.0"
   }
 }
