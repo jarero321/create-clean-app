@@ -1,8 +1,16 @@
-export function getMCPTemplates(config: { name: string; description: string }) {
-  const moduleName = `github.com/carlos/${config.name}`;
+import type { ProjectConfig, ProjectCreator } from "../../domain/interfaces";
 
-  return {
-    "go.mod": `module ${moduleName}
+export class MCPCreator implements ProjectCreator {
+  readonly type = "mcp";
+  readonly stack = "go";
+  readonly installCommand = "go mod tidy";
+  readonly nextSteps = "make inspect";
+
+  getTemplates(config: ProjectConfig): Record<string, string> {
+    const moduleName = `github.com/carlos/${config.name}`;
+
+    return {
+      "go.mod": `module ${moduleName}
 
 go 1.23.0
 
@@ -12,7 +20,7 @@ require (
 )
 `,
 
-    ".gitignore": `bin/
+      ".gitignore": `bin/
 *.exe
 *.exe~
 *.dll
@@ -29,7 +37,7 @@ go.work.sum
 .DS_Store
 `,
 
-    "Makefile": `.PHONY: build run run-sse inspect clean test tidy
+      "Makefile": `.PHONY: build run run-sse inspect clean test tidy
 
 BINARY_NAME=${config.name}
 BUILD_DIR=bin
@@ -62,7 +70,7 @@ tidy:
 .DEFAULT_GOAL := build
 `,
 
-    "README.md": `# ${config.name}
+      "README.md": `# ${config.name}
 
 ${config.description}
 
@@ -90,7 +98,7 @@ make inspect    # MCP Inspector UI
 \`\`\`
 `,
 
-    "cmd/server/main.go": `package main
+      "cmd/server/main.go": `package main
 
 import (
 \t"flag"
@@ -131,7 +139,7 @@ func main() {
 }
 `,
 
-    "internal/domain/entity/entity.go": `package entity
+      "internal/domain/entity/entity.go": `package entity
 
 type Input struct {
 \tData string
@@ -143,7 +151,7 @@ type Result struct {
 }
 `,
 
-    "internal/domain/service/service.go": `package service
+      "internal/domain/service/service.go": `package service
 
 import (
 \t"${moduleName}/internal/domain/entity"
@@ -164,7 +172,7 @@ func (s *Service) Process(input entity.Input) entity.Result {
 }
 `,
 
-    "internal/application/port/port.go": `package port
+      "internal/application/port/port.go": `package port
 
 import "${moduleName}/internal/domain/entity"
 
@@ -173,7 +181,7 @@ type ServicePort interface {
 }
 `,
 
-    "internal/application/usecase/usecase.go": `package usecase
+      "internal/application/usecase/usecase.go": `package usecase
 
 import (
 \t"${moduleName}/internal/application/port"
@@ -193,7 +201,7 @@ func (uc *UseCase) Execute(input entity.Input) entity.Result {
 }
 `,
 
-    "internal/infrastructure/mcp/presenter.go": `package mcp
+      "internal/infrastructure/mcp/presenter.go": `package mcp
 
 import (
 \t"fmt"
@@ -211,7 +219,7 @@ func (p *Presenter) Format(result entity.Result) string {
 }
 `,
 
-    "internal/infrastructure/mcp/handler.go": `package mcp
+      "internal/infrastructure/mcp/handler.go": `package mcp
 
 import (
 \t"context"
@@ -241,7 +249,7 @@ func (h *Handler) Handle(ctx context.Context, req mcp.CallToolRequest) (*mcp.Cal
 }
 `,
 
-    "internal/infrastructure/mcp/server.go": `package mcp
+      "internal/infrastructure/mcp/server.go": `package mcp
 
 import (
 \t"fmt"
@@ -289,5 +297,6 @@ func (s *Server) ServeSSE(addr string) error {
 \treturn http.ListenAndServe(addr, sseServer)
 }
 `,
-  };
+    };
+  }
 }
