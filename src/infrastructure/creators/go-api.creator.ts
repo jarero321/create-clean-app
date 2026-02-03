@@ -1,8 +1,16 @@
-export function getHTTPSAPITemplates(config: { name: string; description: string }) {
-  const moduleName = `github.com/carlos/${config.name}`;
+import type { ProjectConfig, ProjectCreator } from "../../domain/interfaces";
 
-  return {
-    "go.mod": `module ${moduleName}
+export class GoAPICreator implements ProjectCreator {
+  readonly type = "microservice";
+  readonly stack = "go";
+  readonly installCommand = "go mod tidy";
+  readonly nextSteps = "make run";
+
+  getTemplates(config: ProjectConfig): Record<string, string> {
+    const moduleName = `github.com/carlos/${config.name}`;
+
+    return {
+      "go.mod": `module ${moduleName}
 
 go 1.23.0
 
@@ -12,7 +20,7 @@ require (
 )
 `,
 
-    ".gitignore": `bin/
+      ".gitignore": `bin/
 *.exe
 *.dll
 *.so
@@ -28,7 +36,7 @@ go.work.sum
 .env
 `,
 
-    "Makefile": `.PHONY: build run clean test tidy
+      "Makefile": `.PHONY: build run clean test tidy
 
 BINARY_NAME=${config.name}
 BUILD_DIR=bin
@@ -55,7 +63,7 @@ tidy:
 .DEFAULT_GOAL := build
 `,
 
-    "README.md": `# ${config.name}
+      "README.md": `# ${config.name}
 
 ${config.description}
 
@@ -87,7 +95,7 @@ make test     # Run tests
 - \`POST /api/v1/process\` - Process data
 `,
 
-    "cmd/api/main.go": `package main
+      "cmd/api/main.go": `package main
 
 import (
 \t"flag"
@@ -114,7 +122,7 @@ func main() {
 }
 `,
 
-    "internal/domain/entity/entity.go": `package entity
+      "internal/domain/entity/entity.go": `package entity
 
 type Input struct {
 \tData string \`json:"data"\`
@@ -126,7 +134,7 @@ type Result struct {
 }
 `,
 
-    "internal/domain/service/service.go": `package service
+      "internal/domain/service/service.go": `package service
 
 import (
 \t"${moduleName}/internal/domain/entity"
@@ -147,7 +155,7 @@ func (s *Service) Process(input entity.Input) entity.Result {
 }
 `,
 
-    "internal/application/port/port.go": `package port
+      "internal/application/port/port.go": `package port
 
 import "${moduleName}/internal/domain/entity"
 
@@ -156,7 +164,7 @@ type ServicePort interface {
 }
 `,
 
-    "internal/application/usecase/usecase.go": `package usecase
+      "internal/application/usecase/usecase.go": `package usecase
 
 import (
 \t"${moduleName}/internal/application/port"
@@ -176,7 +184,7 @@ func (uc *UseCase) Execute(input entity.Input) entity.Result {
 }
 `,
 
-    "internal/infrastructure/http/handler.go": `package http
+      "internal/infrastructure/http/handler.go": `package http
 
 import (
 \t"encoding/json"
@@ -213,7 +221,7 @@ func (h *Handler) Process(w http.ResponseWriter, r *http.Request) {
 }
 `,
 
-    "internal/infrastructure/http/router.go": `package http
+      "internal/infrastructure/http/router.go": `package http
 
 import "github.com/go-chi/chi/v5"
 
@@ -226,5 +234,6 @@ func NewRouter(h *Handler) *chi.Mux {
 \treturn r
 }
 `,
-  };
+    };
+  }
 }

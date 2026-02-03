@@ -1,83 +1,52 @@
-#!/usr/bin/env bun
-import * as p from "@clack/prompts";
-import chalk from "chalk";
-import figlet from "figlet";
-import gradient from "gradient-string";
-import { createMCP } from "./commands/create-mcp";
-import { createHTTPSAPI } from "./commands/create-https-api";
-
-const coolGradient = gradient(["#00d4ff", "#7c3aed", "#f472b6"]);
+#!/usr/bin/env node
+import { CreateProjectUseCase } from "./application/use-cases";
+import { ShellServiceImpl, FileServiceImpl, GitServiceImpl } from "./infrastructure/services";
+import { CreatorRegistry } from "./infrastructure/creators";
+import {
+  showBanner,
+  selectProjectType,
+  selectStack,
+  getProjectConfig,
+  createProgressReporter,
+  showNextSteps,
+} from "./infrastructure/cli";
 
 async function main() {
-  console.clear();
+  showBanner();
 
-  const title = figlet.textSync("Create Go App", { font: "Small" });
-  console.log(coolGradient(title));
-  console.log(chalk.dim("  Clean Architecture scaffolding for Go projects\n"));
+  const registry = new CreatorRegistry();
 
-  const projectType = await p.select({
-    message: "What do you want to create?",
-    options: [
-      { value: "mcp", label: "MCP Server", hint: "Model Context Protocol for LLMs" },
-      { value: "https-api", label: "HTTPS API", hint: "REST API with Clean Architecture" },
-    ],
-  });
+  const projectType = await selectProjectType();
+  if (!projectType) return;
 
-  if (p.isCancel(projectType)) {
-    p.cancel("Operation cancelled");
-    process.exit(0);
+  let stack = "go";
+
+  const creators = registry.getByType(projectType);
+  if (creators.length > 1) {
+    const selectedStack = await selectStack(creators, projectType);
+    if (!selectedStack) return;
+    stack = selectedStack;
   }
 
-  const projectName = await p.text({
-    message: "Project name:",
-    placeholder: "my-awesome-project",
-    validate: (value) => {
-      if (!value) return "Project name is required";
-      if (!/^[a-z0-9-]+$/.test(value)) return "Use lowercase, numbers and hyphens only";
-    },
-  });
+  const config = await getProjectConfig();
+  if (!config) return;
 
-  if (p.isCancel(projectName)) {
-    p.cancel("Operation cancelled");
-    process.exit(0);
+  const creator = registry.get(projectType, stack);
+  if (!creator) {
+    console.error(`No creator found for ${projectType}:${stack}`);
+    process.exit(1);
   }
 
-  const description = await p.text({
-    message: "Description:",
-    placeholder: "A brief description of your project",
-  });
+  const shellService = new ShellServiceImpl();
+  const fileService = new FileServiceImpl();
+  const gitService = new GitServiceImpl(shellService);
 
-  if (p.isCancel(description)) {
-    p.cancel("Operation cancelled");
-    process.exit(0);
-  }
+  const useCase = new CreateProjectUseCase(fileService, gitService, shellService);
+  const progress = createProgressReporter();
 
-  const features = await p.multiselect({
-    message: "Select features:",
-    options: [
-      { value: "gitflow", label: "Git Flow", hint: "Initialize with main/develop branches" },
-      { value: "docker", label: "Docker", hint: "Add Dockerfile and docker-compose" },
-      { value: "ci", label: "GitHub Actions", hint: "Add CI/CD workflow" },
-    ],
-    initialValues: ["gitflow"],
-  });
+  const nextSteps = await useCase.execute(creator, config, progress);
 
-  if (p.isCancel(features)) {
-    p.cancel("Operation cancelled");
-    process.exit(0);
-  }
-
-  const config = {
-    name: projectName as string,
-    description: (description as string) || "",
-    features: features as string[],
-  };
-
-  if (projectType === "mcp") {
-    await createMCP(config);
-  } else {
-    await createHTTPSAPI(config);
-  }
+  showNextSteps(config.name, nextSteps);
 }
 
 main().catch(console.error);
