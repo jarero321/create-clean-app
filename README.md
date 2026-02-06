@@ -1,148 +1,194 @@
 <div align="center">
 
-# create-clean-app
+```
+                      _                  _
+  ___ _ __ ___  __ _| |_ ___        ___| | ___  __ _ _ __
+ / __| '__/ _ \/ _` | __/ _ \_____ / __| |/ _ \/ _` | '_ \
+| (__| | |  __/ (_| | ||  __/_____| (__| |  __/ (_| | | | |
+ \___|_|  \___|\__,_|\__\___|      \___|_|\___|\__,_|_| |_|
+```
 
-![Build](https://img.shields.io/github/actions/workflow/status/jarero321/create-clean-app/ci.yml?branch=main)
-![Version](https://img.shields.io/npm/v/@cjarero183006/create-clean-app)
-![License](https://img.shields.io/github/license/jarero321/create-clean-app)
-![Node](https://img.shields.io/badge/node-%3E%3D18-brightgreen)
-
-**CLI for scaffolding projects with Clean Architecture**
+### I copy-pasted the same boilerplate for every project. Never again.
 
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
 ![Bun](https://img.shields.io/badge/Bun-000000?logo=bun&logoColor=white)
 ![Go](https://img.shields.io/badge/Go-00ADD8?logo=go&logoColor=white)
 ![NestJS](https://img.shields.io/badge/NestJS-E0234E?logo=nestjs&logoColor=white)
 
-[Installation](#installation) •
-[Usage](#usage) •
-[Templates](#available-templates) •
-[Contributing](#contributing)
+[![npm version](https://img.shields.io/npm/v/@cjarero183006/create-clean-app?style=flat-square&color=00d4ff)](https://www.npmjs.com/package/@cjarero183006/create-clean-app)
+[![npm downloads](https://img.shields.io/npm/dm/@cjarero183006/create-clean-app?style=flat-square&color=7c3aed)](https://www.npmjs.com/package/@cjarero183006/create-clean-app)
+[![License](https://img.shields.io/badge/license-MIT-brightgreen?style=flat-square)](LICENSE)
+[![Tests](https://img.shields.io/badge/tests-40%20passed-brightgreen?style=flat-square)](package.json)
+
+**Scaffold MCP servers and microservices with Clean Architecture**
+
+[Quick Start](#quick-start) · [Templates](#templates) · [What You Get](#what-you-get) · [Architecture](#architecture)
 
 </div>
 
 ---
 
-## Features
+## Why I Built This
 
-| Feature | Description |
-|---------|-------------|
-| Clean Architecture | All templates follow domain-driven design with clear separation of concerns |
-| Multiple Stacks | Support for Go and NestJS (TypeScript) |
-| Git Flow | Optional initialization with main/develop branches |
-| Docker Support | Add Dockerfile and docker-compose to your project |
-| GitHub Actions | Add CI/CD workflow for automated testing and deployment |
+Every new project started the same way:
 
-## Installation
+1. Create folder structure (domain, application, infrastructure)
+2. Copy configs from last project (tsconfig, Dockerfile, docker-compose)
+3. Set up CI/CD workflow
+4. Initialize Git Flow branches
+5. Fix the things I forgot to copy
 
-### Using npx (recommended)
+I automated all of it. Now I scaffold production-ready projects in seconds.
+
+---
+
+## Demo
+
+```
+┌  create-clean-app
+│
+◇  What do you want to create?
+│  ● MCP Server
+│  ○ Microservice / API
+│
+◇  Select your stack:
+│  ● Go
+│  ○ NestJS
+│
+◇  Project name:
+│  my-mcp-server
+│
+◇  Description:
+│  GitHub repository monitor
+│
+◇  Select features:
+│  ◉ Git Flow (main + develop branches)
+│  ◉ Docker (Dockerfile + docker-compose)
+│  ◉ GitHub Actions (CI/CD workflow)
+│
+└  ✔ Project created successfully!
+```
+
+---
+
+## Quick Start
 
 ```bash
+# Run directly
 npx @cjarero183006/create-clean-app
-```
 
-### Using Bun
-
-```bash
+# Or with bun
 bunx @cjarero183006/create-clean-app
-```
 
-### Global installation
-
-```bash
+# Or install globally
 npm install -g @cjarero183006/create-clean-app
 create-clean-app
 ```
 
-## Usage
+Answer 5 questions. Get a complete project.
 
-Run the CLI and follow the interactive prompts:
+---
 
-```bash
-create-clean-app
-```
+## Templates
 
-The CLI will guide you through:
+### MCP Servers
 
-1. **Project type** - MCP Server or Microservice/API
-2. **Stack selection** - Go or NestJS
-3. **Project name** - Your project's name (lowercase, hyphens allowed)
-4. **Description** - Brief description of your project
-5. **Features** - Git Flow, Docker, GitHub Actions
+| Stack | What you get |
+|-------|--------------|
+| **Go** | mcp-go SDK, stdio transport, Clean Architecture layers, Makefile |
+| **NestJS** | @modelcontextprotocol/sdk, decorators, dependency injection, TypeScript |
 
-## Available Templates
+### Microservices / APIs
 
-| Type | Stack | Description |
-|------|-------|-------------|
-| MCP Server | Go | Model Context Protocol server using mcp-go SDK |
-| MCP Server | NestJS | MCP server with @modelcontextprotocol/sdk |
-| Microservice | Go | REST API with Chi router |
-| Microservice | NestJS | REST API with TypeScript, decorators & DI |
+| Stack | What you get |
+|-------|--------------|
+| **Go** | Chi router, REST endpoints, Clean Architecture, health checks |
+| **NestJS** | Full NestJS setup, controllers, services, DTOs, validation |
 
-## Project Structure
+---
 
-All generated projects follow Clean Architecture principles:
+## What You Get
+
+Every template generates a production-ready structure:
 
 ```
 my-project/
-├── domain/           # Entities & business logic
-├── application/      # Use cases & ports (interfaces)
-└── infrastructure/   # Adapters (HTTP, MCP, DB, etc.)
+├── domain/                 # Entities & business rules
+├── application/            # Use cases & ports
+├── infrastructure/         # HTTP, MCP, DB adapters
+├── Dockerfile              # Multi-stage build
+├── docker-compose.yml      # Local development
+├── Makefile                # build, run, test, lint
+├── .github/workflows/      # CI pipeline
+└── README.md               # Project docs
 ```
+
+### Optional Features
+
+| Feature | What it adds |
+|---------|--------------|
+| **Git Flow** | Initializes repo with `main` and `develop` branches |
+| **Docker** | Multi-stage Dockerfile, docker-compose.yml with volumes |
+| **GitHub Actions** | CI workflow with lint, test, build steps |
+
+---
+
+## Architecture
+
+All templates follow Clean Architecture. Dependencies point inward.
+
+```
+┌─────────────────────────────────────────┐
+│              Domain                      │
+│       (Entities, Business Rules)         │
+│       No external dependencies           │
+├─────────────────────────────────────────┤
+│            Application                   │
+│         (Use Cases, Ports)               │
+│       Orchestrates domain logic          │
+├─────────────────────────────────────────┤
+│           Infrastructure                 │
+│       (HTTP, MCP, DB, External)          │
+│       Implements ports (adapters)        │
+└─────────────────────────────────────────┘
+```
+
+| Aspect | Choice |
+|--------|--------|
+| Architecture | Clean Architecture / Hexagonal |
+| Testing | Vitest (40 passing) |
+| Build | tsup (ESM) |
+| CLI UI | @clack/prompts via cli-builder |
+
+---
 
 ## Development
 
-### Prerequisites
-
-- [Bun](https://bun.sh) >= 1.0
-- Node.js >= 18
-
-### Setup
-
 ```bash
-# Clone the repository
 git clone https://github.com/jarero321/create-clean-app.git
 cd create-clean-app
-
-# Install dependencies
 bun install
-
-# Run in development
 bun run dev
-
-# Run tests
-bun test
-
-# Build for production
-bun run build
 ```
 
-### Scripts
-
-| Script | Description |
-|--------|-------------|
+| Script | What it does |
+|--------|--------------|
 | `bun run dev` | Run CLI in development mode |
-| `bun test` | Run tests in watch mode |
-| `bun run test:run` | Run tests once |
-| `bun run test:coverage` | Run tests with coverage |
-| `bun run build` | Build for production |
+| `bun test` | Watch mode |
+| `bun run test:run` | Single run |
+| `bun run test:coverage` | Coverage report |
+| `bun run build` | Production build |
 
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'feat: add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+---
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT
 
 ---
 
 <div align="center">
 
-Made with :heart: by [Carlos](https://github.com/jarero321)
+**[Report Bug](https://github.com/jarero321/create-clean-app/issues)** · **[Request Feature](https://github.com/jarero321/create-clean-app/issues)**
 
 </div>
