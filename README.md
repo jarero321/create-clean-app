@@ -138,19 +138,19 @@ my-project/
 All templates follow Clean Architecture. Dependencies point inward.
 
 ```
-┌────────────────────────────────────────┐
-│               Domain                   │
-│      Entities · Business Rules         │
-│      No external dependencies          │
-├────────────────────────────────────────┤
-│             Application                │
-│          Use Cases · Ports             │
-│      Orchestrates domain logic         │
-├────────────────────────────────────────┤
-│            Infrastructure              │
-│      HTTP · MCP · DB · External        │
-│      Implements ports (adapters)       │
-└────────────────────────────────────────┘
+┌─────────────────────────────────────────┐
+│              Domain                      │
+│       (Entities, Business Rules)         │
+│       No external dependencies           │
+├─────────────────────────────────────────┤
+│            Application                   │
+│         (Use Cases, Ports)               │
+│       Orchestrates domain logic          │
+├─────────────────────────────────────────┤
+│           Infrastructure                 │
+│       (HTTP, MCP, DB, External)          │
+│       Implements ports (adapters)        │
+└─────────────────────────────────────────┘
 ```
 
 | Aspect | Choice |
